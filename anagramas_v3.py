@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-import git
+import pathlib
 
 # Clases y funciones del trie
 class TrieNode:
@@ -21,9 +21,9 @@ class Trie:
         node.is_end_of_word = True
 
     def _search_anagrams(self, node, available_letters, prefix, anagrams):
-        if node.is_end_of_word and not any(available_letters.values()):
+        if node.is_end_of_word:
             anagrams.add(prefix)
-
+        
         for letter, count in available_letters.items():
             if count > 0 and letter in node.children:
                 available_letters[letter] -= 1
@@ -59,30 +59,23 @@ st.set_page_config(
     initial_sidebar_state="auto",
 )
 
-# Clonar el repositorio del diccionario desde GitHub
-repo_url = "https://github.com/raulcamaracarreon/Anagramas_Exactos_V2.git"
-repo_path = "dict_rae_txt"
-if not os.path.exists(repo_path):
-    git.Git(".").clone(repo_url, repo_path)
-
-# Imprimir la ruta del diccionario
-path_diccionario = os.path.join(repo_path, "dics")
-print(f"Ruta del diccionario: {path_diccionario}")
-
 # Cargar el diccionario
+# Reemplaza esto con la ruta a tu carpeta de archivos del diccionario
+path = pathlib.Path(__file__).parent / "dict_rae_txt/dics"
 trie = Trie()
-cargar_diccionario(path_diccionario, trie)
+cargar_diccionario(path, trie)
 
 # Interfaz de usuario
 st.title("Generador de Anagramas")
-palabras = st.text_input("Introduce una o varias palabras o frases:")
+palabras = st.text_input("Introduce una o varias palabras:")
 
 if palabras:
-    palabras_sin_espacios = palabras.replace(" ", "")
-    anagramas = trie.search_anagrams(palabras_sin_espacios)
-    st.subheader(f"Se han encontrado {len(anagramas)} anagramas exactos:")
-    st.write(", ".join(sorted(anagramas)))
+    anagramas = trie.search_anagrams(palabras)
+    anagramas_ordenados = sorted(anagramas, key=len, reverse=True)  # Ordenar anagramas de mayor a menor cantidad de letras
+    st.subheader(f"Se han encontrado {len(anagramas_ordenados)} anagramas:")
+    for anagrama in anagramas_ordenados:
+        st.write(anagrama)
 else:
-    st.write("Por favor, ingrese una o varias palabras o frases para generar anagramas exactos.")
+    st.write("Por favor, ingrese una o varias palabras para generar anagramas.")
 
 
