@@ -81,7 +81,8 @@ if palabras:
     anagramas_ordenados = sorted(anagramas, key=len, reverse=True)  # Ordenar anagramas de mayor a menor cantidad de letras
     st.subheader(f"Se han encontrado {len(anagramas_ordenados)} anagramas:")
     for anagrama in anagramas_ordenados:
-        st.write(anagrama)
+        if len(anagrama) > 2:
+            st.write(anagrama)
 else:
     st.write("Por favor, ingrese una o varias palabras para generar anagramas.")
 
