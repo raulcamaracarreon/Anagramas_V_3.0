@@ -1,6 +1,11 @@
 import os
 import streamlit as st
 import pathlib
+import unicodedata
+
+# Función para quitar acentos de una palabra
+def quitar_acentos(palabra):
+    return ''.join(c for c in unicodedata.normalize('NFD', palabra) if unicodedata.category(c) != 'Mn')
 
 # Clases y funciones del trie
 class TrieNode:
@@ -31,6 +36,7 @@ class Trie:
                 available_letters[letter] += 1
 
     def search_anagrams(self, input_word):
+        input_word = quitar_acentos(input_word)
         available_letters = {}
         for letter in input_word:
             if letter in available_letters:
@@ -49,7 +55,8 @@ def cargar_diccionario(path, trie):
             for linea in lineas:
                 palabras = linea.split(', ')
                 for palabra in palabras:
-                    trie.insert(palabra.lower())
+                    palabra_sin_acentos = quitar_acentos(palabra.lower())
+                    trie.insert(palabra_sin_acentos)
 
 # Configuración de la aplicación Streamlit
 st.set_page_config(
