@@ -61,7 +61,7 @@ st.set_page_config(
 
 # Cargar el diccionario
 # Reemplaza esto con la ruta a tu carpeta de archivos del diccionario
-path = pathlib.Path(__file__).parent / "dict_rae_txt/dics"
+path = pathlib.Path(__file__).parent / "dics"
 trie = Trie()
 cargar_diccionario(path, trie)
 
