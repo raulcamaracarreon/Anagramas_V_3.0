@@ -5,7 +5,7 @@ import unicodedata
 
 # Función para quitar acentos de una palabra
 def quitar_acentos(palabra):
-    return ''.join(c for c in unicodedata.normalize('NFD', palabra) if unicodedata.category(c) != 'Mn')
+    return ''.join(c if c == 'ñ' or c == 'Ñ' else (c for c in unicodedata.normalize('NFD', c) if unicodedata.category(c) != 'Mn') for c in palabra)
 
 # Clases y funciones del trie
 class TrieNode:
